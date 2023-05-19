@@ -1,8 +1,75 @@
 .app-nav{
   background-color: #638598;
-  text-align: center;
-  height: 50px;
+  height: 60px;
   width: 100%;
   padding: 5px 0px 15px 0px;
+  
+}
 
+.weather-units{
+  border: none;
+  background-color: transparent;
+  width: 50px;
+  font-size: 20px;
+  
+}
+
+.weather-units-ul{
+  list-style: none;
+  display: flex;
+
+}
+
+.app-weather-input{
+ width: 120%;
+ border: 1px solid #638598;
+ height: 35px;
+margin-top: 8px;
+border-radius: 15px;
+text-align: center;
+}
+
+
+.weather-city-btn{
+  margin-top: 8px;
+  height: 35px;
+  width: 35px;
+  border-radius: 10px;
+  background-color:#638598 ;
+  border: 1px solid #638598;
+  
+}
+
+
+
+.weather-col{
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 10px;
+  padding-left: 50px;
+  float: none;
+  margin: auto;
+  
+}
+
+.temp-style{
+  font-size: 35px;
+}
+
+.weather-icons{
+  width: 60px;
+  height: 60px;
+  margin-top: -10px;
+}
+
+.weather-bottom-col{
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 10px;
+  float: none;
+  margin: auto;
+  height: 200px;
+}
+
+.weather-day-night{
+  font-size: 20px;
+  
 }
