@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Weather from "./Components/Weather";
 import { Col, Container, Row } from "reactstrap";
 import { FaSearch } from "react-icons/fa";
 import axios from "axios";
+import DateForecast from "./Components/DateForecast";
 
 export default function App() {
   const [city, setCity] = useState("");
@@ -10,6 +11,8 @@ export default function App() {
   const [isActive, setIsActive] = useState(false);
   const [tempUnit, setTempUnit] = useState("metric");
   const [selected, setSelected] = useState();
+  const [hourlyWeather, setHourlyWeather] = useState({});
+
   function handleUnitsChange(value) {
     setTempUnit(value);
     handleClick();
@@ -23,8 +26,22 @@ export default function App() {
     setSelected(units);
   }
 
+  function groupHourlyWeatherByDay(hourlyWeather) {
+    const groupedData = {};
+    hourlyWeather.forEach((weatherData) => {
+      const date = weatherData.dt_txt.split(" ")[0];
+
+      if (!groupedData[date]) {
+        groupedData[date] = [];
+      }
+      groupedData[date].push(weatherData);
+    });
+    return groupedData;
+  }
+
   const handleClick = async () => {
     const baseUrl = `https://api.openweathermap.org/data/2.5/weather?&appid=a14e7ab880c601d7c8d6ecea90cf71f5`;
+    const baseUrlForecats = `https://api.openweathermap.org/data/2.5/forecast?&appid=a14e7ab880c601d7c8d6ecea90cf71f5`;
 
     await axios
       .get(baseUrl, { params: { q: city, units: tempUnit } })
@@ -32,27 +49,46 @@ export default function App() {
         setWeatherInfo(data.data);
       })
       .catch((err) => console.log("hata sebebi: ", err));
+    await axios
+      .get(baseUrlForecats, { params: { q: city, units: tempUnit } })
+      .then(async (data) => {
+        const groupedData = groupHourlyWeatherByDay(data.data.list);
+
+        setHourlyWeather(groupedData);
+      })
+      .catch((err) => console.log("hata sebebi: ", err));
+
     setIsActive(true);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const baseUrl = `https://api.openweathermap.org/data/2.5/weather?&appid=a14e7ab880c601d7c8d6ecea90cf71f5`;
+
+        const response = await axios.get(baseUrl, {
+          params: { q: city, units: tempUnit },
+        });
+        setWeatherInfo(response.data);
+      } catch (error) {
+        console.log("hata sebebi: ", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
-    <div style={{ overflowX: "hidden" }}>
+    <div className="app-div">
       <Row>
         <nav className="app-nav">
           <Container>
-            <Col md="11" style={{ float: "none", margin: "auto" }}>
-              <ul
-                style={{
-                  listStyle: "none",
-                  display: "flex",
-                }}
-              >
+            <Col md="11" className="app-col">
+              <ul className="app-ul">
                 <li>
-                  <h3 style={{ marginTop: "5px" }}>Weather App</h3>
+                  <h3 className="header-style">Weather App</h3>
                 </li>
-                <li style={{ marginLeft: "47%" }}>
-                  <ul
-                    style={{ listStyle: "none", display: "flex", gap: "45px" }}
-                  >
+                <li className="app-li">
+                  <ul className="app-li-ul">
                     <li>
                       <div className="form">
                         <input
@@ -68,17 +104,19 @@ export default function App() {
                       <div>
                         <button
                           disabled={!city}
-                          onClick={handleClick}
+                          onClick={() => {
+                            handleClick();
+                          }}
                           className="weather-city-btn"
                         >
-                          <FaSearch style={{ marginTop: "-3px" }} />
+                          <FaSearch className="app-search-icon" />
                         </button>
                       </div>
                     </li>
                   </ul>
                 </li>
                 <li>
-                  <div style={{ marginTop: "8px" }}>
+                  <div className="app-unit-div">
                     <ul className="weather-units-ul">
                       <li>
                         <button
@@ -96,7 +134,7 @@ export default function App() {
                           °C
                         </button>
                       </li>
-                      <li style={{ marginTop: "4px" }}>
+                      <li className="app-unit-li">
                         <strong>|</strong>
                       </li>
                       <li>
@@ -131,6 +169,13 @@ export default function App() {
             tempUnit={tempUnit}
             city={city}
             handleUnitsChange={handleUnitsChange}
+          />
+          <DateForecast
+            isActive={isActive}
+            tempUnit={tempUnit}
+            city={city}
+            handleUnitsChange={handleUnitsChange}
+            hourlyWeather={hourlyWeather}
           />
         </Container>
       </Row>
