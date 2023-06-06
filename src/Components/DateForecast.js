@@ -8,18 +8,7 @@ import { GiSnowing } from "react-icons/gi";
 import { WiHumidity } from "react-icons/wi";
 
 export default function DateForecast(props) {
-  const { isActive, tempUnit, hourlyWeather } = props;
-
-  const mappedTemp = Object.keys(hourlyWeather).map((date) => {
-    const weatherDataList = hourlyWeather[date];
-
-    const totalTemperature = weatherDataList.reduce(
-      (sum, weatherData) => sum + weatherData.main.temp,
-      0
-    );
-    const averageTemperature = totalTemperature / weatherDataList.length;
-    return { date, averageTemperature };
-  });
+  const { isActive, tempUnit, hourlyWeather, mappedTemp } = props;
 
   const getDescriptionMode = (weatherDataList, n) => {
     let maxCount = 0;
@@ -46,7 +35,7 @@ export default function DateForecast(props) {
         weatherDataList,
         weatherDataList.length
       );
-      
+
       result.push({
         date,
         modeDescription,
@@ -166,6 +155,7 @@ export default function DateForecast(props) {
                 </ul>
               </center>
             </Col>
+            <br />
           </div>
         </Container>
       ) : null}

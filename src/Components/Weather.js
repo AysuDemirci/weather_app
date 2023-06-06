@@ -7,9 +7,10 @@ import { BsCloudsFill, BsFillCloudFog2Fill } from "react-icons/bs";
 import { GiSnowing, GiSunrise, GiSunset } from "react-icons/gi";
 import { MdCompress, MdVisibility } from "react-icons/md";
 import { WiHumidity, WiStrongWind } from "react-icons/wi";
+import LineChart from "./LineChart";
 
 export default function Weather(props) {
-  const { weatherInfo, isActive, tempUnit } = props;
+  const { weatherInfo, isActive, tempUnit, hourlyWeather, mappedTemp } = props;
 
   const date = new Date().toLocaleDateString();
 
@@ -110,7 +111,10 @@ export default function Weather(props) {
                             <BsCloudsFill className="weather-icons" />
                           ) : weatherInfo.weather[0].description ===
                             "clear sky" ? (
-                            <IoIosSunny className="weather-icons" />
+                            <IoIosSunny
+                              className="weather-icons"
+                              style={{ color: "orange" }}
+                            />
                           ) : weatherInfo.weather[0].description === "haze" ||
                             weatherInfo.weather[0].description === "fog" ? (
                             <BsFillCloudFog2Fill className="weather-icons" />
@@ -287,6 +291,15 @@ export default function Weather(props) {
                               </tr>
                             </tbody>
                           </table>
+                          <br />
+                        </Col>
+
+                        <Col style={{ marginTop: "30px" }}>
+                          <LineChart
+                            isActive={isActive}
+                            hourlyWeather={hourlyWeather}
+                            mappedTemp={mappedTemp}
+                          />
                         </Col>
                       </Row>
                     </Col>

@@ -39,6 +39,17 @@ export default function App() {
     return groupedData;
   }
 
+  const mappedTemp = Object.keys(hourlyWeather).map((date) => {
+    const weatherDataList = hourlyWeather[date];
+
+    const totalTemperature = weatherDataList.reduce(
+      (sum, weatherData) => sum + weatherData.main.temp,
+      0
+    );
+    const averageTemperature = totalTemperature / weatherDataList.length;
+    return { date, averageTemperature };
+  });
+
   const handleClick = async () => {
     const baseUrl = `https://api.openweathermap.org/data/2.5/weather?&appid=a14e7ab880c601d7c8d6ecea90cf71f5`;
     const baseUrlForecats = `https://api.openweathermap.org/data/2.5/forecast?&appid=a14e7ab880c601d7c8d6ecea90cf71f5`;
@@ -167,15 +178,15 @@ export default function App() {
             weatherInfo={weatherInfo}
             isActive={isActive}
             tempUnit={tempUnit}
-            city={city}
-            handleUnitsChange={handleUnitsChange}
+            hourlyWeather={hourlyWeather}
+            mappedTemp={mappedTemp}
           />
+
           <DateForecast
             isActive={isActive}
             tempUnit={tempUnit}
-            city={city}
-            handleUnitsChange={handleUnitsChange}
             hourlyWeather={hourlyWeather}
+            mappedTemp={mappedTemp}
           />
         </Container>
       </Row>
