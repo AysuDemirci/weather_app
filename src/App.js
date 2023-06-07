@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import Weather from "./Components/Weather";
 import { Col, Container, Row } from "reactstrap";
 import { FaSearch } from "react-icons/fa";
-import axios from "axios";
 import DateForecast from "./Components/DateForecast";
+import { getWeatherData, getForecastData } from "./Api";
 
 export default function App() {
   const [city, setCity] = useState("");
@@ -39,42 +39,32 @@ export default function App() {
     return groupedData;
   }
 
+  const mappedTemp = Object.keys(hourlyWeather).map((date) => {
+    const weatherDataList = hourlyWeather[date];
+
+    const totalTemperature = weatherDataList.reduce(
+      (sum, weatherData) => sum + weatherData.main.temp,
+      0
+    );
+    const averageTemperature = totalTemperature / weatherDataList.length;
+    return { date, averageTemperature };
+  });
+
   const handleClick = async () => {
-    const baseUrl = `https://api.openweathermap.org/data/2.5/weather?&appid=a14e7ab880c601d7c8d6ecea90cf71f5`;
-    const baseUrlForecats = `https://api.openweathermap.org/data/2.5/forecast?&appid=a14e7ab880c601d7c8d6ecea90cf71f5`;
-
-    await axios
-      .get(baseUrl, { params: { q: city, units: tempUnit } })
-      .then(async (data) => {
-        setWeatherInfo(data.data);
-      })
-      .catch((err) => console.log("hata sebebi: ", err));
-    await axios
-      .get(baseUrlForecats, { params: { q: city, units: tempUnit } })
-      .then(async (data) => {
-        const groupedData = groupHourlyWeatherByDay(data.data.list);
-
-        setHourlyWeather(groupedData);
-      })
-      .catch((err) => console.log("hata sebebi: ", err));
-
-    setIsActive(true);
+    try {
+      const weatherData = await getWeatherData(city, tempUnit);
+      setWeatherInfo(weatherData);
+      const forecastData = await getForecastData(city, tempUnit);
+      const groupedData = groupHourlyWeatherByDay(forecastData.list);
+      setHourlyWeather(groupedData);
+      setIsActive(true);
+    } catch (error) {
+      console.log("Hata Sebebi:", error);
+    }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const baseUrl = `https://api.openweathermap.org/data/2.5/weather?&appid=a14e7ab880c601d7c8d6ecea90cf71f5`;
-
-        const response = await axios.get(baseUrl, {
-          params: { q: city, units: tempUnit },
-        });
-        setWeatherInfo(response.data);
-      } catch (error) {
-        console.log("hata sebebi: ", error);
-      }
-    };
-    fetchData();
+    handleClick();
   }, []);
 
   return (
@@ -167,15 +157,15 @@ export default function App() {
             weatherInfo={weatherInfo}
             isActive={isActive}
             tempUnit={tempUnit}
-            city={city}
-            handleUnitsChange={handleUnitsChange}
+            hourlyWeather={hourlyWeather}
+            mappedTemp={mappedTemp}
           />
+
           <DateForecast
             isActive={isActive}
             tempUnit={tempUnit}
-            city={city}
-            handleUnitsChange={handleUnitsChange}
             hourlyWeather={hourlyWeather}
+            mappedTemp={mappedTemp}
           />
         </Container>
       </Row>
