@@ -54,7 +54,7 @@ export default function DateForecast(props) {
             <Col
               md="9"
               style={{
-                backgroundImage: 'url("../images/stbbfq79-1495105583.webp") ',
+                backgroundImage: 'url("../images/weather-in-the-drakensberg-at-champagne-castle-hotel.jpg") ',
               }}
               className="dateforecast-col"
             >
