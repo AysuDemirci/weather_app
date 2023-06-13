@@ -161,6 +161,7 @@ export default function App() {
             tempUnit={tempUnit}
             hourlyWeather={hourlyWeather}
             mappedTemp={mappedTemp}
+            
           />
 
           <DateForecast

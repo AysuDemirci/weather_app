@@ -13,7 +13,27 @@ export default function Weather(props) {
   const { weatherInfo, isActive, tempUnit, hourlyWeather, mappedTemp } = props;
 
   const date = new Date().toLocaleDateString();
+  function getWindDirection(degrees) {
+    if (degrees >= 337.5 || degrees < 22.5) {
+      return "N";
+    } else if (degrees >= 22.5 && degrees < 67.5) {
+      return "NE";
+    } else if (degrees >= 67.5 && degrees < 112.5) {
+      return "E";
+    } else if (degrees >= 112.5 && degrees < 157.5) {
+      return "SE";
+    } else if (degrees >= 157.5 && degrees < 202.5) {
+      return "S";
+    } else if (degrees >= 202.5 && degrees < 247.5) {
+      return "SW";
+    } else if (degrees >= 247.5 && degrees < 292.5) {
+      return "W";
+    } else if (degrees >= 292.5 && degrees < 337.5) {
+      return "NW";
+    }
+  }
 
+  console.log(weatherInfo);
   return (
     <div>
       <Container>
@@ -243,8 +263,12 @@ export default function Weather(props) {
                                 </td>
                                 <td>
                                   {new Date(
-                                    weatherInfo.sys.sunrise * 1000
-                                  ).toLocaleTimeString()}
+                                    (weatherInfo.sys.sunrise +
+                                      weatherInfo.timezone) *
+                                      1000
+                                  ).toLocaleTimeString("en-US", {
+                                    timeZone: "GMT",
+                                  })}
                                 </td>
                                 <td>
                                   <GiSunset className="weather-description-icons" />{" "}
@@ -252,8 +276,12 @@ export default function Weather(props) {
                                 </td>
                                 <td>
                                   {new Date(
-                                    weatherInfo.sys.sunset * 1000
-                                  ).toLocaleTimeString()}
+                                    (weatherInfo.sys.sunset +
+                                      weatherInfo.timezone) *
+                                      1000
+                                  ).toLocaleTimeString("en-US", {
+                                    timeZone: "GMT",
+                                  })}
                                 </td>
                               </tr>
                               <tr className="weather-tr">
@@ -269,11 +297,10 @@ export default function Weather(props) {
                                   Wind Degree
                                 </td>
                                 <td>
-                                  {tempUnit === "metric" ? (
-                                    <td>{weatherInfo.wind.deg}</td>
-                                  ) : (
-                                    <td>{weatherInfo.wind.deg}</td>
-                                  )}
+                                  <td>
+                                    {getWindDirection(weatherInfo.wind.deg)}
+                                  </td>
+                                  
                                 </td>
                               </tr>
                               <tr>
