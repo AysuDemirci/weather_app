@@ -6,7 +6,7 @@ import DateForecast from "./Components/DateForecast";
 import { getWeatherData, getForecastData } from "./Api";
 
 export default function App() {
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState("Ankara");
   const [weatherInfo, setWeatherInfo] = useState({});
   const [isActive, setIsActive] = useState(false);
   const [tempUnit, setTempUnit] = useState("metric");
@@ -25,6 +25,8 @@ export default function App() {
   function changeSelected(units) {
     setSelected(units);
   }
+ 
+
 
   function groupHourlyWeatherByDay(hourlyWeather) {
     const groupedData = {};
@@ -159,6 +161,7 @@ export default function App() {
             tempUnit={tempUnit}
             hourlyWeather={hourlyWeather}
             mappedTemp={mappedTemp}
+            
           />
 
           <DateForecast
