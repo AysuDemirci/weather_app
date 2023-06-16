@@ -123,11 +123,13 @@ font-size: 22px;
   margin: auto;
 }
 
+
 .weather-table{
   width: 90%;
   height: 100%;
   float: none;
   margin: auto;
+  
 }
 .weather-tr{
   border-bottom: 1px solid;
@@ -230,4 +232,11 @@ font-size: 22px;
 
 .app-unit-li{
   margin-top: 4px;
+}
+
+.linechart-col{
+  float: none;
+  margin: auto;
+  height: 200px;
+ 
 }
